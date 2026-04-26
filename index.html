@@ -2,76 +2,114 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>COREWATCHER</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CoreWatcher Premium</title>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { background: #0a0a0b; color: #cbd5e1; font-family: 'Segoe UI', sans-serif; display: flex; align-items: center; justify-content: center; min-height: 100vh; }
-        .dashboard { display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; width: 700px; padding: 20px; }
-        .header { grid-column: span 2; text-align: center; margin-bottom: 20px; }
-        h1 { font-size: 2rem; letter-spacing: 3px; color: #38bdf8; margin-bottom: 5px; }
-        #sub-info { color: #475569; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 1px; }
-        .card { background: #111113; border: 1px solid #1e293b; padding: 20px; border-radius: 12px; }
-        .label { color: #64748b; font-size: 0.7rem; text-transform: uppercase; margin-bottom: 10px; font-weight: bold; }
-        .value { font-size: 1.3rem; font-weight: bold; margin-bottom: 15px; font-family: 'Consolas', monospace; }
-        .progress-bg { background: #1e293b; height: 6px; border-radius: 3px; overflow: hidden; }
-        .progress-fill { height: 100%; width: 0%; transition: 1.5s ease; background: #38bdf8; }
+        body { 
+            background: radial-gradient(circle at top right, #1e293b, #0f172a); 
+            color: #f8fafc; 
+            font-family: 'Segoe UI', Roboto, sans-serif; 
+            display: flex; 
+            justify-content: center; 
+            align-items: center; 
+            min-height: 100vh;
+        }
+        .container { 
+            display: grid; 
+            grid-template-columns: repeat(2, 1fr); 
+            gap: 20px; 
+            width: 90%; 
+            max-width: 800px;
+            padding: 20px;
+        }
+        .header {
+            grid-column: span 2;
+            text-align: center;
+            margin-bottom: 10px;
+        }
+        .header h1 {
+            font-size: 1.8rem;
+            letter-spacing: 2px;
+            background: linear-gradient(to right, #38bdf8, #818cf8);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-transform: uppercase;
+        }
+        .card { 
+            background: rgba(30, 41, 59, 0.7); 
+            backdrop-filter: blur(10px);
+            padding: 25px; 
+            border-radius: 20px; 
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+            transition: transform 0.3s ease;
+        }
+        .card:hover { transform: translateY(-5px); border-color: #38bdf8; }
+        h3 { margin-bottom: 15px; color: #94a3b8; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 1px; }
+        .value { font-size: 2.2rem; font-weight: 800; color: #38bdf8; display: block; }
+        .sub-value { font-size: 0.9rem; color: #64748b; margin-top: 5px; }
+        .ip-box { grid-column: span 2; display: flex; justify-content: space-between; align-items: center; padding: 15px 25px; }
+        .status-dot { width: 10px; height: 10px; background: #22c55e; border-radius: 50%; display: inline-block; margin-right: 8px; box-shadow: 0 0 10px #22c55e; }
     </style>
 </head>
 <body>
-    <div class="dashboard">
+    <div class="container">
         <div class="header">
-            <h1 id="host-title">COREWATCHER</h1>
-            <p id="sub-info">Synchronizing...</p>
+            <h1>CoreWatcher</h1>
+            <p style="color: #64748b; font-size: 0.8rem;">System Monitoring Engine</p>
         </div>
 
         <div class="card">
-            <div class="label">CPU Load</div>
-            <div id="cpu-val" class="value">0%</div>
-            <div class="progress-bg"><div id="cpu-fill" class="progress-fill"></div></div>
+            <h3>CPU Load</h3>
+            <span class="value"><span id="cpu">0</span>%</span>
+            <div class="sub-value">Current active processing</div>
         </div>
 
         <div class="card">
-            <div class="label">RAM Memory</div>
-            <div id="ram-val" class="value">0 GB</div>
-            <div class="progress-bg"><div id="ram-fill" class="progress-fill"></div></div>
+            <h3>Memory</h3>
+            <span class="value"><span id="ram">0</span>%</span>
+            <div class="sub-value">Physical RAM usage</div>
         </div>
 
         <div class="card">
-            <div class="label">Disk Usage</div>
-            <div id="disk-val" class="value">0 GB</div>
-            <div class="progress-bg"><div id="disk-fill" class="progress-fill"></div></div>
+            <h3>Disk Storage</h3>
+            <span class="value" style="font-size: 1.5rem;"><span id="diskUsed">0</span><span style="color:#64748b; font-size: 1rem;"> / <span id="diskTotal">0</span> GB</span></span>
+            <div class="sub-value">Total filesystem capacity</div>
         </div>
 
         <div class="card">
-            <div class="label">Session Info</div>
-            <div id="boot-val" class="value" style="color: #38bdf8;">--:--</div>
-            <p style="font-size: 0.7rem; color: #475569;">SYSTEM START TIME</p>
+            <h3>Uptime</h3>
+            <span class="value"><span id="uptime">0</span>h</span>
+            <div class="sub-value">System running time</div>
+        </div>
+
+        <div class="card ip-box">
+            <div>
+                <span class="status-dot"></span>
+                <span style="color: #94a3b8; font-size: 0.9rem;">Network Active</span>
+            </div>
+            <span id="ip" style="font-family: monospace; color: #818cf8; font-weight: bold;">Loading...</span>
         </div>
     </div>
 
     <script>
-        async function update() {
+        async function updateStats() {
             try {
-                const res = await fetch('http://localhost:5000/api/stats');
+                const res = await fetch('http://localhost:3000/stats');
                 const data = await res.json();
-                
-                document.getElementById('host-title').innerText = `COREWATCHER @ ${data.hostname.toUpperCase()}`;
-                document.getElementById('sub-info').innerText = `${data.platform.toUpperCase()} | UPTIME: ${data.uptime} HOURS`;
-                
-                document.getElementById('cpu-val').innerText = data.cpu + '%';
-                document.getElementById('cpu-fill').style.width = data.cpu + '%';
-                
-                document.getElementById('ram-val').innerText = `${data.ramUsed} / ${data.ramTotal} GB`;
-                document.getElementById('ram-fill').style.width = data.ramPercent + '%';
-                
-                document.getElementById('disk-val').innerText = `${data.diskUsed} GB`;
-                document.getElementById('disk-fill').style.width = data.diskPercent + '%';
-                
-                document.getElementById('boot-val').innerText = data.bootTime;
-            } catch (err) {}
+                document.getElementById('cpu').innerText = data.cpu;
+                document.getElementById('ram').innerText = data.ram;
+                document.getElementById('diskUsed').innerText = data.diskUsed;
+                document.getElementById('diskTotal').innerText = data.diskTotal;
+                document.getElementById('ip').innerText = data.ip;
+                document.getElementById('uptime').innerText = data.uptime;
+            } catch (err) {
+                console.error('Connection lost');
+            }
         }
-        setInterval(update, 5000);
-        update();
+        setInterval(updateStats, 3000);
+        updateStats();
     </script>
 </body>
 </html>
