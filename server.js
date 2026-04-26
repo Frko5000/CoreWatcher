@@ -1,41 +1,41 @@
-const http = require('http');
 const si = require('systeminformation');
+const http = require('http');
 
 const server = http.createServer(async (req, res) => {
     res.setHeader('Access-Control-Allow-Origin', '*');
     res.setHeader('Content-Type', 'application/json');
 
-    if (req.url === '/api/stats') {
+    if (req.url === '/stats') {
         try {
-            const [cpu, mem, disk, os, time] = await Promise.all([
-                si.currentLoad(),
-                si.mem(),
-                si.fsSize(),
-                si.osInfo(),
-                si.time()
-            ]);
+            const load = await si.currentLoad();
+            const mem = await si.mem();
+            const disk = await si.fsSize();
+            const time = si.time();
+            const network = await si.networkInterfaces();
+            const defaultNet = await si.networkInterfaceDefault();
+            const mainNet = network.find(i => i.iface === defaultNet);
 
-            const stats = {
-                cpu: cpu.currentLoad.toFixed(1),
-                ramUsed: (mem.active / 1024 / 1024 / 1024).toFixed(2),
-                ramTotal: (mem.total / 1024 / 1024 / 1024).toFixed(2),
-                ramPercent: ((mem.active / mem.total) * 100).toFixed(1),
-                diskUsed: (disk[0].used / 1024 / 1024 / 1024).toFixed(2),
-                diskPercent: disk[0].use.toFixed(1),
-                hostname: os.hostname,
-                platform: os.platform,
-                uptime: (time.uptime / 3600).toFixed(1),
-                bootTime: new Date(time.uptime * 1000).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})
+            const data = {
+                cpu: Math.round(load.currentLoad),
+                ram: Math.round((mem.active / mem.total) * 100),
+                disk: Math.round(disk[0].use),
+                diskUsed: (disk[0].used / (1024 * 1024 * 1024)).toFixed(1),
+                diskTotal: (disk[0].size / (1024 * 1024 * 1024)).toFixed(1),
+                ip: mainNet ? mainNet.ip4 : '127.0.0.1',
+                uptime: Math.round(time.uptime / 3600)
             };
 
-            res.end(JSON.stringify(stats));
+            res.end(JSON.stringify(data));
         } catch (err) {
             res.statusCode = 500;
-            res.end(JSON.stringify({ error: "System error" }));
+            res.end(JSON.stringify({ error: 'Internal Server Error' }));
         }
+    } else {
+        res.statusCode = 404;
+        res.end(JSON.stringify({ error: 'Not Found' }));
     }
 });
 
-server.listen(5000, () => {
-    console.log("CoreWatcher Engine Active on Port 5000");
+server.listen(3000, () => {
+    console.log('Server running on port 3000');
 });
