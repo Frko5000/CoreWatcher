@@ -1,6 +1,6 @@
 # 🖥️ CoreWatcher
 
-corewatcher is a lightweight system monitor dashboard i made with node.js and vanilla js. simple tool to track your pc stats without lag.
+corewatcher is a lightweight system monitor dashboard that maded with node.js and vanilla js. simple tool to track your pc stats without lag.
 
 ## ⚖️ optimization issue
 at first (v1.0), i tried to show top processes every 2 seconds and it used like 40% of my cpu lmao 
