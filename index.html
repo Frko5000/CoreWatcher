@@ -11,22 +11,15 @@
             color: #f8fafc; 
             font-family: 'Segoe UI', Roboto, sans-serif; 
             display: flex; 
+            flex-direction: column;
             justify-content: center; 
             align-items: center; 
             min-height: 100vh;
-        }
-        .container { 
-            display: grid; 
-            grid-template-columns: repeat(2, 1fr); 
-            gap: 20px; 
-            width: 90%; 
-            max-width: 800px;
             padding: 20px;
         }
         .header {
-            grid-column: span 2;
             text-align: center;
-            margin-bottom: 10px;
+            margin-bottom: 24px;
         }
         .header h1 {
             font-size: 1.8rem;
@@ -36,80 +29,170 @@
             -webkit-text-fill-color: transparent;
             text-transform: uppercase;
         }
+        .header p {
+            color: #64748b;
+            font-size: 0.8rem;
+            margin-top: 4px;
+        }
+ 
+        .row {
+            display: flex;
+            gap: 14px;
+            width: 100%;
+            max-width: 1100px;
+            flex-wrap: nowrap;
+        }
+ 
         .card { 
             background: rgba(30, 41, 59, 0.7); 
             backdrop-filter: blur(10px);
-            padding: 25px; 
-            border-radius: 20px; 
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            box-shadow: 0 10px 25px rgba(0,0,0,0.3);
-            transition: transform 0.3s ease;
+            padding: 20px 18px; 
+            border-radius: 18px; 
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+            transition: transform 0.3s ease, border-color 0.3s ease;
+            flex: 1;
+            min-width: 0;
         }
-        .card:hover { transform: translateY(-5px); border-color: #38bdf8; }
-        h3 { margin-bottom: 15px; color: #94a3b8; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 1px; }
-        .value { font-size: 2.2rem; font-weight: 800; color: #38bdf8; display: block; }
-        .sub-value { font-size: 0.9rem; color: #64748b; margin-top: 5px; }
-        .ip-box { grid-column: span 2; display: flex; justify-content: space-between; align-items: center; padding: 15px 25px; }
-        .status-dot { width: 10px; height: 10px; background: #22c55e; border-radius: 50%; display: inline-block; margin-right: 8px; box-shadow: 0 0 10px #22c55e; }
+        .card:hover { transform: translateY(-4px); border-color: #38bdf8; }
+ 
+        .ip-card {
+            margin-top: 14px;
+            width: 100%;
+            max-width: 1100px;
+            background: rgba(30, 41, 59, 0.7);
+            backdrop-filter: blur(10px);
+            padding: 14px 24px;
+            border-radius: 18px;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+ 
+        h3 { 
+            margin-bottom: 10px; 
+            color: #94a3b8; 
+            font-size: 0.75rem; 
+            text-transform: uppercase; 
+            letter-spacing: 1px; 
+            white-space: nowrap;
+        }
+        .value { 
+            font-size: 1.9rem; 
+            font-weight: 800; 
+            color: #38bdf8; 
+            display: block;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        .sub-value { 
+            font-size: 0.82rem; 
+            color: #64748b; 
+            margin-top: 6px;
+            white-space: nowrap;
+        }
+ 
+        .status-dot { 
+            width: 9px; height: 9px; 
+            background: #22c55e; 
+            border-radius: 50%; 
+            display: inline-block; 
+            margin-right: 7px; 
+            box-shadow: 0 0 8px #22c55e; 
+        }
+        .na-text { color: #475569; font-size: 0.9rem; }
     </style>
 </head>
 <body>
-    <div class="container">
-        <div class="header">
-            <h1>CoreWatcher</h1>
-            <p style="color: #64748b; font-size: 0.8rem;">System Monitoring Engine</p>
-        </div>
-
+    <div class="header">
+        <h1>CoreWatcher</h1>
+        <p>System Monitoring Engine</p>
+    </div>
+ 
+    <div class="row">
+ 
         <div class="card">
             <h3>CPU Load</h3>
-            <span class="value"><span id="cpu">0</span>%</span>
-            <div class="sub-value">Current active processing</div>
+            <span class="value" id="cpu">—</span>
+            <div class="sub-value">Temp: <span id="cpuTemp">—</span></div>
         </div>
-
+ 
         <div class="card">
             <h3>Memory</h3>
-            <span class="value"><span id="ram">0</span>%</span>
-            <div class="sub-value">Physical RAM usage</div>
+            <span class="value" id="ram">—</span>
+            <div class="sub-value"><span id="ramUsed">0</span> / <span id="ramTotal">0</span> GB</div>
         </div>
-
+ 
         <div class="card">
             <h3>Disk Storage</h3>
-            <span class="value" style="font-size: 1.5rem;"><span id="diskUsed">0</span><span style="color:#64748b; font-size: 1rem;"> / <span id="diskTotal">0</span> GB</span></span>
-            <div class="sub-value">Total filesystem capacity</div>
+            <span class="value" style="font-size:1.4rem;">
+                <span id="diskUsed">0</span>
+                <span style="color:#64748b;font-size:0.95rem;"> / <span id="diskTotal">0</span> GB</span>
+            </span>
+            <div class="sub-value">Filesystem capacity</div>
         </div>
-
+ 
         <div class="card">
             <h3>Uptime</h3>
-            <span class="value"><span id="uptime">0</span>h</span>
+            <span class="value" id="uptime">—</span>
             <div class="sub-value">System running time</div>
         </div>
-
-        <div class="card ip-box">
-            <div>
-                <span class="status-dot"></span>
-                <span style="color: #94a3b8; font-size: 0.9rem;">Network Active</span>
-            </div>
-            <span id="ip" style="font-family: monospace; color: #818cf8; font-weight: bold;">Loading...</span>
+ 
+        <div class="card">
+            <h3>GPU</h3>
+            <span class="value" style="font-size:1.1rem;" id="gpuName">—</span>
+            <div class="sub-value">Temp: <span id="gpuTemp">—</span> &nbsp;|&nbsp; VRAM: <span id="gpuVram">—</span></div>
         </div>
+ 
     </div>
-
+ 
+    <div class="ip-card">
+        <div>
+            <span class="status-dot"></span>
+            <span style="color:#94a3b8; font-size:0.9rem;">Network Active</span>
+        </div>
+        <span id="ip" style="font-family:monospace; color:#818cf8; font-weight:bold;">Loading...</span>
+    </div>
+ 
     <script>
+        function set(id, value, suffix) {
+            const el = document.getElementById(id);
+            if (!el) return;
+            if (value === null || value === undefined) {
+                el.innerHTML = '<span class="na-text">N/A</span>';
+            } else {
+                el.innerText = suffix ? value + suffix : value;
+            }
+        }
+ 
         async function updateStats() {
             try {
                 const res = await fetch('http://localhost:3000/stats');
-                const data = await res.json();
-                document.getElementById('cpu').innerText = data.cpu;
-                document.getElementById('ram').innerText = data.ram;
-                document.getElementById('diskUsed').innerText = data.diskUsed;
-                document.getElementById('diskTotal').innerText = data.diskTotal;
-                document.getElementById('ip').innerText = data.ip;
-                document.getElementById('uptime').innerText = data.uptime;
+                const d = await res.json();
+ 
+                set('cpu',      d.cpu,     '%');
+                set('cpuTemp',  d.cpuTemp  != null ? d.cpuTemp  + '°C' : null);
+                set('ram',      d.ram,     '%');
+                set('ramUsed',  d.ramUsed);
+                set('ramTotal', d.ramTotal);
+                set('diskUsed', d.diskUsed);
+                set('diskTotal',d.diskTotal);
+                set('uptime',   d.uptime,  'h');
+                set('ip',       d.ip);
+                set('gpuName',  d.gpuName);
+                set('gpuTemp',  d.gpuTemp  != null ? d.gpuTemp  + '°C' : null);
+                set('gpuVram',  d.gpuVram  != null ? d.gpuVram  + ' MB' : null);
             } catch (err) {
                 console.error('Connection lost');
             }
         }
+ 
         setInterval(updateStats, 3000);
         updateStats();
     </script>
 </body>
 </html>
+ 
