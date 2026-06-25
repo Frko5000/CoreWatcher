@@ -31,4 +31,4 @@ Bash
 node server.js
 open index.html and u r ready
 
-claude is love :3
+claude is love  :3
